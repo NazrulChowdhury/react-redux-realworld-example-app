@@ -1,25 +1,25 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+// sign in via UI
+Cypress.Commands.add('signIn', (email, password) => {
+    cy.title().should('eq', 'Conduit')
+    cy.get('input[type="email"]').type(email)
+    cy.get('input[type="password"]').type(password)
+    cy.get('button[type="submit"]').contains('Sign in').should('be.visible').click()
+})
+//sign in via api 
+Cypress.Commands.add('logIn', ()=>{
+    cy.fixture('userInfo').then(user =>{
+        cy.request({
+            url : 'https://conduit.productionready.io/api/users/login',
+            method : 'POST',
+            body: { user: {email: user.email, password : user.password} }
+        }).then(res =>{
+            localStorage.setItem('jwt',res.body.user.token)
+            cy.visit('https://react-redux.realworld.io')
+            cy.contains('Your Feed').should('be.visible')
+        })
+    })  
+}) 
+// menu item selection
+Cypress.Commands.add('menu', (pageName) => {
+    cy.get('ul.navbar-nav').children().contains(pageName)
+})
