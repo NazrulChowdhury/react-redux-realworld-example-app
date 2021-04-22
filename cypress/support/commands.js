@@ -9,13 +9,14 @@ Cypress.Commands.add('signIn', (email, password) => {
 Cypress.Commands.add('logIn', ()=>{
     cy.fixture('userInfo').then(user =>{
         cy.request({
-            url : 'https://conduit.productionready.io/api/users/login',
+            url : Cypress.env('api'),
             method : 'POST',
             body: { user: {email: user.email, password : user.password} }
         }).then(res =>{
             localStorage.setItem('jwt',res.body.user.token)
-            cy.visit('https://react-redux.realworld.io')
+            cy.visit('/')
             cy.contains('Your Feed').should('be.visible')
+            cy.contains('Sign In').should('not.exist')
         })
     })  
 }) 

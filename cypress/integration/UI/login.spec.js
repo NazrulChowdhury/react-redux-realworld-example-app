@@ -6,7 +6,7 @@ describe('login',function(){
         })
     })
     beforeEach(()=>{
-        cy.visit('/#/login?_k=fkl125')
+        cy.visit('/login')
     })
     it('sign in attempt fails with wrong email',function(){      
         cy.signIn(user.wrongEmail, user.password)
@@ -16,11 +16,11 @@ describe('login',function(){
         cy.signIn(user.email, user.wrongPassword)
         cy.contains('email or password is invalid')
     })
-    it.only('sign in attempt successful with correct credentials',function(){
+    it('sign in attempt successful with correct credentials',function(){
         cy.signIn(user.email, user.password)
         cy.contains('Your Feed').should('be.visible')
     })
-    it('login via api', ()=>{ 
+    it.only('login via api', ()=>{ 
         cy.logIn()
     })
 })

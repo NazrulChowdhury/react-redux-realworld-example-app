@@ -1,3 +1,6 @@
 {
-    "baseUrl": "http://localhost:4100"
+    "baseUrl": "http://localhost:4100",
+    "env": {
+        "api" : "https://conduit.productionready.io/api/users/login"
+    }
 }
