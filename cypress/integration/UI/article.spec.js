@@ -1,45 +1,45 @@
-describe('create article and mark unmark as favorite',function(){
+import user from "../../fixtures/userInfo"
+import * as article from "../../page.modules/article";
+
+describe('create post/ mark unmark as favorite/ add and delete comment/ delete post',function(){
     before(()=>{
         cy.logIn();
-        cy.fixture('userInfo').then(userinfo=>{
-            window.user = userinfo
-        })
+        article.addPostAndComment(user) // adds unique post and comment to the user object      
     })
     it('create a post', function(){ 
         cy.menu('New Post').click()
-        cy.hash().should('include','#/editor')
-        const post = Math.random().toString(36).slice(2)
-        cy.get('form').within(($form)=>{
-            cy.get('input').first().type('title'+post)
-            cy.get('input').eq(1).type('subject'+post) 
-            cy.get('textarea').last().type('body'+post)
-            cy.get('button[type="button"]').contains('Publish Article').should('be.visible').click()
-        }) 
-        cy.hash().should('contain', '#/article')
-        cy.contains('title'+post)
+        cy.url().should('include','/editor')
+        article.createPost(user.post)
+        cy.url().should('contain', '/article')
+        cy.contains(user.postTitle)
     })  
-    it('likes an article',function(){
+    it('like a post',function(){
         cy.menu(user.name).click()
-        cy.contains('My Articles').should('be.visible')
-        cy.get('.btn-outline-primary',{timeout:10000}).first().click() 
+        article.clicklikeButton() 
+        article.checkLike('exist')   
     }) 
-    it('unlikes an article',()=>{
-        cy.reload()
-        cy.get('.btn-outline-primary',{timeout:10000}).first().click()
-
-    }) 
-    it.only('comment on an article then delete it',()=>{
+    it('unlike a post',()=>{
         cy.menu(user.name).click()
-        cy.contains('My Articles').should('be.visible')
-        cy.get('div.article-preview > a.preview-link').first().click()
-        const myComment = Math.random().toString(36).slice(2)
-        cy.get('textarea.form-control').type(myComment)
-        cy.get('button[type="submit"]').contains('Post Comment').click()
-        cy.get('p.card-text').first().as('comment')
-        cy.get('@comment').contains(myComment)
-        cy.get('span[class="mod-options"] > i.ion-trash-a').first().click()
-        //cy.wait(3000)
-        //cy.reload()
-        // cy.get('p.card-text').should('not.exist')
-  })
+        article.clicklikeButton() 
+        article.checkLike('not.exist')
+    }) 
+    it('comment on an post', ()=>{
+        cy.menu(user.name).click()
+        article.postComment(user.comment)
+        cy.get('p.card-text').first().contains(user.comment)
+    })
+    it('delete a comment', ()=>{
+        cy.menu(user.name).click()
+        cy.get('a.preview-link').first().should('contain',user.postTitle).click()
+        cy.get('span.mod-options > i.ion-trash-a').first().click()
+        cy.wait(3000)
+        cy.contains(user.comment).should('not.exist')
+    })
+    it('delete a post', ()=>{
+        cy.menu(user.name).click()
+        cy.get('a.preview-link').first().should('contain',user.postTitle).click()
+        cy.get('i.ion-trash-a').first().click()
+        cy.menu(user.name).click()
+        cy.contains(user.postTitle).should('not.exist')
+    })
 })

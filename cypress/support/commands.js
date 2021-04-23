@@ -1,3 +1,5 @@
+import * as user from '../fixtures/userInfo'
+
 // sign in via UI
 Cypress.Commands.add('signIn', (email, password) => {
     cy.title().should('eq', 'Conduit')
@@ -7,18 +9,16 @@ Cypress.Commands.add('signIn', (email, password) => {
 })
 //sign in via api 
 Cypress.Commands.add('logIn', ()=>{
-    cy.fixture('userInfo').then(user =>{
-        cy.request({
-            url : Cypress.env('api'),
-            method : 'POST',
-            body: { user: {email: user.email, password : user.password} }
-        }).then(res =>{
-            localStorage.setItem('jwt',res.body.user.token)
-            cy.visit('/')
-            cy.contains('Your Feed').should('be.visible')
-            cy.contains('Sign In').should('not.exist')
-        })
-    })  
+    cy.request({
+        url : Cypress.env('api'),
+        method : 'POST',
+        body: { user: {email: user.email, password : user.password} }
+    }).then(res =>{
+        localStorage.setItem('jwt',res.body.user.token)
+        cy.visit('/')
+        cy.contains('Your Feed').should('be.visible')
+        cy.contains('Sign In').should('not.exist')
+    })    
 }) 
 // menu item selection
 Cypress.Commands.add('menu', (pageName) => {

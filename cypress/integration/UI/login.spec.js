@@ -1,10 +1,6 @@
+import * as user from '../../fixtures/userInfo'
 
-describe('login',function(){
-    before(()=>{
-        cy.fixture('userInfo').then(userinfo=>{
-            window.user = userinfo
-        })
-    })
+describe('login test with diffferent credentials',function(){
     beforeEach(()=>{
         cy.visit('/login')
     })
@@ -20,7 +16,7 @@ describe('login',function(){
         cy.signIn(user.email, user.password)
         cy.contains('Your Feed').should('be.visible')
     })
-    it.only('login via api', ()=>{ 
+    it('login via the login api', ()=>{ 
         cy.logIn()
     })
 })
