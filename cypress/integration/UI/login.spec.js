@@ -12,8 +12,10 @@ describe('login test with diffferent credentials',function(){
         cy.signIn(user.email, user.wrongPassword)
         cy.contains('email or password is invalid')
     })
-    it.only('sign in attempt successful with correct credentials',function(){
+    it('sign in attempt successful with correct credentials',function(){
         cy.signIn(user.email, user.password)
+        cy.wait(1000)
+        cy.menu(user.name).should('exist')
     })
     it('login via the login api', ()=>{ 
         cy.logIn()
