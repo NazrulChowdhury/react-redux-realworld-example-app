@@ -71,4 +71,6 @@ The example application is a social blogging site (i.e. a Medium.com clone) call
 
 <br />
 
-[![Brought to you by Thinkster](https://raw.githubusercontent.com/gothinkster/realworld/master/media/end.png)](https://thinkster.io)
+## Cypress E2E test guide
+
+To run the spec files Fixtures/userInfo.json file need to be updated with correct credentials 
