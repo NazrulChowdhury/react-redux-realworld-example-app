@@ -1,7 +1,7 @@
 import user from "../../fixtures/userInfo"
 import * as article from "../../page.modules/article";
 
-describe('create post/ mark unmark as favorite/ add and delete comment/ delete post',function(){
+describe('create post/ mark unmark as favorite/ add and delete comment/ delete post', ()=>{
     before(()=>{
         cy.logIn();
         article.addPostAndComment(user) // adds unique post and comment to the user object      
