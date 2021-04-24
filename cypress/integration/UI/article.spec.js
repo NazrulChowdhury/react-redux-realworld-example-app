@@ -6,14 +6,14 @@ describe('create post/ mark unmark as favorite/ add and delete comment/ delete p
         cy.logIn();
         article.addPostAndComment(user) // adds unique post and comment to the user object      
     })
-    it('create a post', function(){ 
+    it('create a post', ()=>{ 
         cy.menu('New Post').click()
         cy.url().should('include','/editor')
         article.createPost(user.post)
         cy.url().should('contain', '/article')
         cy.contains(user.postTitle)
     })  
-    it('like a post',function(){
+    it('like a post', ()=>{
         cy.menu(user.name).click()
         article.clicklikeButton() 
         article.checkLike('exist')   
@@ -32,7 +32,7 @@ describe('create post/ mark unmark as favorite/ add and delete comment/ delete p
         cy.menu(user.name).click()
         cy.get('a.preview-link').first().should('contain',user.postTitle).click()
         cy.get('span.mod-options > i.ion-trash-a').first().click()
-        cy.wait(3000)
+        cy.wait(500)
         cy.contains(user.comment).should('not.exist')
     })
     it('delete a post', ()=>{
